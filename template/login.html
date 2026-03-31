@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — AuthApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --card: #141720;
+      --border: #252836;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --text: #e8eaf0;
+      --muted: #8b8fa8;
+      --error-bg: #2a1a1a;
+      --error-border: #7f1d1d;
+      --error-text: #fca5a5;
+      --success-bg: #0f2a1a;
+      --success-border: #14532d;
+      --success-text: #86efac;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated background blobs */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    body::before {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #6c63ff, transparent);
+      top: -100px; left: -100px;
+    }
+    body::after {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #a78bfa, transparent);
+      bottom: -80px; right: -80px;
+      animation-delay: -6s;
+    }
+    @keyframes drift {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      animation: fadeUp 0.6s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .brand .logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 16px;
+      margin-bottom: 14px;
+      font-size: 22px;
+      box-shadow: 0 8px 24px rgba(108,99,255,0.35);
+    }
+    .brand h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+    .brand p {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .flash-msg {
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 22px;
+      border: 1px solid;
+    }
+    .flash-msg.error {
+      background: var(--error-bg);
+      border-color: var(--error-border);
+      color: var(--error-text);
+    }
+    .flash-msg.success {
+      background: var(--success-bg);
+      border-color: var(--success-border);
+      color: var(--success-text);
+    }
+
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .field input {
+      width: 100%;
+      background: #0d0f14;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-size: 15px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .field input::placeholder { color: #3d4057; }
+    .field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.18);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      margin-top: 6px;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 20px rgba(108,99,255,0.35);
+    }
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(108,99,255,0.45);
+    }
+    .btn:active { transform: translateY(0); }
+
+    .switch {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+    .switch a {
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .switch a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="brand">
+      <div class="logo">🔐</div>
+      <h1>Welcome back</h1>
+      <p>Sign in to continue to your account</p>
+    </div>
+
+    <div class="card">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="flash-msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST" action="/login">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="username" placeholder="Enter your username" required autocomplete="username"/>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password"/>
+        </div>
+        <button class="btn" type="submit">Sign In →</button>
+      </form>
+    </div>
+
+    <div class="switch">
+      Don't have an account? <a href="/register">Create one</a>
+    </div>
+  </div>
+</body>
+</html>
