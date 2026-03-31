@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — AuthApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --card: #141720;
+      --border: #252836;
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --text: #e8eaf0;
+      --muted: #8b8fa8;
+      --gold: #f59e0b;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,99,255,0.12), transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: pulse 6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.7; }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+      padding: 20px;
+      text-align: center;
+      animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .greeting-label {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 12px;
+      animation: fadeUp 0.7s 0.1s both;
+    }
+
+    .hello {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(36px, 8vw, 54px);
+      line-height: 1.1;
+      margin-bottom: 6px;
+      animation: fadeUp 0.7s 0.15s both;
+    }
+    .hello .username {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .wave { display: inline-block; animation: wave 1.8s ease-in-out infinite; }
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(20deg); }
+      75% { transform: rotate(-10deg); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 36px;
+      margin-top: 36px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      animation: fadeUp 0.7s 0.25s both;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--gold));
+    }
+
+    .welcome-text {
+      font-size: 17px;
+      line-height: 1.65;
+      color: #c5c8dc;
+      margin-bottom: 28px;
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      margin: 0 auto 28px;
+      border-radius: 2px;
+    }
+
+    .dev-card {
+      background: rgba(108,99,255,0.07);
+      border: 1px solid rgba(108,99,255,0.2);
+      border-radius: 16px;
+      padding: 24px;
+    }
+    .dev-avatar {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 6px 20px rgba(108,99,255,0.4);
+    }
+    .dev-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .dev-title {
+      font-size: 13px;
+      color: var(--accent2);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .dev-bio {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .tag {
+      padding: 5px 12px;
+      background: rgba(108,99,255,0.12);
+      border: 1px solid rgba(108,99,255,0.25);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--accent2);
+      font-weight: 500;
+    }
+
+    .logout-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 32px;
+      padding: 12px 28px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      animation: fadeUp 0.7s 0.35s both;
+    }
+    .logout-btn:hover {
+      border-color: #e55;
+      color: #fca5a5;
+      background: rgba(220,50,50,0.08);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="greeting-label">Logged in successfully</div>
+
+    <div class="hello">
+      Hello, <span class="username">{{ username }}</span> <span class="wave">👋</span>
+    </div>
+
+    <div class="card">
+      <p class="welcome-text">
+        Welcome to this project! We're glad to have you here.<br/>
+        This application was crafted with care and passion.
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="dev-card">
+        <div class="dev-avatar">👨‍💻</div>
+        <div class="dev-name">Arsh Sandhi</div>
+        <div class="dev-title">CR · 4AI1 Batch 2</div>
+        <div class="dev-bio">
+          A passionate Python developer with strong skills in Flask, web development,
+          and problem solving. Building clean, scalable solutions one project at a time.
+        </div>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">Flask</span>
+          <span class="tag">Web Dev</span>
+          <span class="tag">Problem Solving</span>
+          <span class="tag">4AI1</span>
+        </div>
+      </div>
+    </div>
+
+    <a href="/logout" class="logout-btn">
+      ← Sign out
+    </a>
+  </div>
+</body>
+</html>
